@@ -1,5 +1,10 @@
 import express, { type Request, type Response } from "express";
 
+import { PrismaClient } from "@prisma/client";
+
+/* Config database */
+const prisma = new PrismaClient();
+
 const app = express();
 const port = 8080;
 app.use(express.json());
