@@ -2,6 +2,8 @@ import express, { type Request, type Response } from "express";
 
 import { PrismaClient, type Post } from "@prisma/client";
 
+import cors from "cors";
+
 /* Config database */
 const prisma = new PrismaClient();
 
@@ -9,7 +11,9 @@ const app = express();
 const port = 8080;
 app.use(express.json());
 
-app.post("/blog", (req: Request, res: Response) => {
+const corsOptions = { origin: ["http://localhost:3000", "http://localhost:5173"] };
+
+app.post("/posts", cors(corsOptions), (req: Request, res: Response) => {
   try {
     const { title, content, authorName, authorEmail }: Omit<Post, "id"> = req.body;
     const post = prisma.post.create({
@@ -31,7 +35,7 @@ app.get("/", (req: Request, res: Response) => {
   res.send("Api running");
 });
 
-app.get("/blog", (req: Request, res: Response) => {
+app.get("/posts", cors(corsOptions), (req: Request, res: Response) => {
   //get all posts
   try {
     const posts = prisma.post.findMany();
@@ -40,14 +44,6 @@ app.get("/blog", (req: Request, res: Response) => {
     console.error(error);
     res.status(500).send("An error occurred while trying to get the posts");
   }
-});
-
-app.get("/blog/:post", (req: Request, res: Response) => {
-  //get a specific post
-});
-
-app.delete("/blog/:post", (req: Request, res: Response) => {
-  //delete a post
 });
 
 app.listen(port, () => {
