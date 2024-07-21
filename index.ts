@@ -13,10 +13,10 @@ app.use(express.json());
 
 const corsOptions = { origin: ["http://localhost:3000", "http://localhost:5173"] };
 
-app.post("/posts", cors(corsOptions), (req: Request, res: Response) => {
+app.post("/posts", cors(corsOptions), async (req: Request, res: Response) => {
   try {
     const { title, content, authorName, authorEmail }: Omit<Post, "id"> = req.body;
-    const post = prisma.post.create({
+    const post = await prisma.post.create({
       data: {
         title,
         content,
@@ -35,10 +35,11 @@ app.get("/", (req: Request, res: Response) => {
   res.send("Api running");
 });
 
-app.get("/posts", cors(corsOptions), (req: Request, res: Response) => {
+app.get("/posts", cors(corsOptions), async (req: Request, res: Response) => {
   //get all posts
   try {
-    const posts = prisma.post.findMany();
+    const posts = await prisma.post.findMany();
+    console.log(posts);
     res.json(posts);
   } catch (error) {
     console.error(error);
