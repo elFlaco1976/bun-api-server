@@ -11,7 +11,10 @@ const app = express();
 const port = 8080;
 app.use(express.json());
 
-const corsOptions = { origin: ["http://localhost:3000", "http://localhost:5173"] };
+const corsOptions = {
+  origin: ["http://localhost:3000", "http://localhost:5173"],
+  methods: ["POST", "GET", "PATCH", "DELETE", "OPTIONS"],
+};
 
 app.post("/posts", cors(corsOptions), async (req: Request, res: Response) => {
   try {
