@@ -10,13 +10,9 @@ const prisma = new PrismaClient();
 const app = express();
 const port = 8080;
 app.use(express.json());
+app.use(cors()); // Enable CORS for all origins
 
-const corsOptions = {
-  origin: ["http://localhost:3000", "http://localhost:5173"],
-  methods: ["POST", "GET", "PATCH", "DELETE", "OPTIONS"],
-};
-
-app.post("/posts", cors(corsOptions), async (req: Request, res: Response) => {
+app.post("/posts", async (req: Request, res: Response) => {
   try {
     const { title, content, authorName, authorEmail }: Omit<Post, "id"> = req.body;
     const post = await prisma.post.create({
@@ -38,7 +34,7 @@ app.get("/", (req: Request, res: Response) => {
   res.send("Api running");
 });
 
-app.get("/posts", cors(corsOptions), async (req: Request, res: Response) => {
+app.get("/posts", async (req: Request, res: Response) => {
   //get all posts
   try {
     const posts = await prisma.post.findMany();
