@@ -46,6 +46,25 @@ app.get("/posts", async (req: Request, res: Response) => {
   }
 });
 
+app.get("/posts/:id", async (req: Request, res: Response) => {
+  try {
+    const postId = parseInt(req.params.id);
+    const post = await prisma.post.findUnique({
+      where: {
+        id: postId,
+      },
+    });
+    if (post) {
+      res.json(post);
+    } else {
+      res.status(404).send("Post not found");
+    }
+  } catch (error) {
+    console.error(error);
+    res.status(500).send("An error occurred while trying to get the post");
+  }
+});
+
 app.listen(port, () => {
   console.log(`Listening on port ${port}...`);
 });
